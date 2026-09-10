@@ -1,7 +1,11 @@
 label {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .custom-input {
-    margin-bottom: 15px;
+  margin-bottom: 15px;
+}
+
+.product-table tbody tr:nth-child(odd) {
+  background-color: #f2f2f2;
 }
