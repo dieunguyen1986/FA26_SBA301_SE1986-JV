@@ -64,19 +64,33 @@ class PlayerList extends React.Component {
     console.log("PlayerList component will unmount.");
   }
 
+
+
   handleStatus = (id) => {
+
+    const STATUS_CYCLE = ["Playing", "Substitute", "Injured"];
     const currentPlayer = this.state.players.find((p) => p.id === id);
 
     const status = currentPlayer.playerStatus;
+    const newStatus = STATUS_CYCLE[(STATUS_CYCLE.indexOf(status) + 1) % STATUS_CYCLE.length];
 
     console.log("Current Player Status: ", status);
 
-    const newPlayers = this.state.players.map((p) => ({
-      ...p,
-      playerStatus: "Playing",
-    }));
+    const newPlayers = this.state.players.map((p) => {
+      
+      if(p.id === currentPlayer.id) {
+        return { ...p, playerStatus: newStatus };
+      }
 
-    this.setState({...this.state, players: newPlayers });
+      return p;
+    });
+
+    this.setState({ ...this.state, players: newPlayers });
+
+    
+
+  
+
   };
 
   render() {
