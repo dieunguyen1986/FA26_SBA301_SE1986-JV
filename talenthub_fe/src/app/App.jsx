@@ -1,6 +1,7 @@
 import { useState } from 'react'
 // import PlayerList from '../shared/demo/PlayerList';
 import ProductList from '../shared/demo/ProductList';
+import Register from '../modules/auths/pages/Register';
 
 function App() {
   // Logic
@@ -13,7 +14,7 @@ function App() {
   // UI
   return (
     <>
-     <ProductList />
+     <Register />
     </>
   )
 }
