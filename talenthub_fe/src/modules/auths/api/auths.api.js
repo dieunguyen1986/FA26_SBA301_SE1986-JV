@@ -1,7 +1,10 @@
 export const authsApi = {
-  register: (payload) => {
+  register: async(payload) => {
+    
+    // fetch
+    console.log(`Auth Appi: ${payload.fullName}`);
 
-
+    return {message: "Register successful!"};
   },
   login: ()=>{
 

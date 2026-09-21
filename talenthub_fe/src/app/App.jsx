@@ -15,7 +15,7 @@ function App() {
   // UI
   return (
     <>
-     <Login />
+     <Register />
     </>
   )
 }
