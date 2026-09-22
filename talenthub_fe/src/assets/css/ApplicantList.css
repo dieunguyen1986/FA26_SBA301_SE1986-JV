@@ -1,0 +1,111 @@
+:root { --navy: #171b3a; --indigo: #5145df; --ink: #20243f; --muted: #8990a6; --line: #edf0f6; --canvas: #f7f8fc; }
+.icon { width: 1em; height: 1em; display: block; }
+.app-shell { min-height: 100vh; background: var(--canvas); color: var(--ink); font-size: 13px; }
+.app-topbar { height: 56px; padding: 0 28px 0 24px; background: var(--navy); color: #fff; position: fixed; inset: 0 0 auto; z-index: 10; }
+.brand-name { color: #fff !important; font-size: 13px; font-weight: 800; letter-spacing: .08em; margin-right: 34px; }.topbar-links { display: flex; gap: 25px; align-items: stretch; height: 100%; color: #a5a8bd; font-size: 11px; font-weight: 600; }.topbar-links span { display: flex; align-items: center; border-bottom: 2px solid transparent; }.topbar-links .selected { color: #fff; border-color: #7064f2; }.topbar-actions { margin-left: auto; display: flex; align-items: center; gap: 22px; }.notification-button, .sidebar-link, .view-button { border: 0; background: transparent; }.notification-button { color: #c6c8da; font-size: 18px; position: relative; }.notification-button span { position: absolute; top: 4px; right: 0; width: 5px; height: 5px; border-radius: 50%; background: #f66c8a; }.profile-button { color: #fff !important; background: #5145df !important; border: 0 !important; border-radius: 50% !important; font-size: 10px; font-weight: 700; width: 28px; height: 28px; padding: 0; }.profile-button::after { display: none; }
+.app-sidebar { position: fixed; top: 56px; bottom: 0; left: 0; z-index: 9; width: 72px; background: #fff; border-right: 1px solid var(--line); display: flex; flex-direction: column; align-items: center; padding-top: 18px; }.sidebar-mark { width: 28px; height: 28px; border-radius: 7px; background: var(--indigo); color: #fff; display: grid; place-items: center; font-size: 13px; font-weight: 800; margin-bottom: 24px; }.sidebar-link { width: 44px; height: 44px; color: #b0b5c4; border-radius: 8px; font-size: 20px; display: grid; place-items: center; margin: 2px 0; position: relative; }.sidebar-link:hover, .sidebar-link.active { color: var(--indigo); background: #f0efff; }.sidebar-label { position: absolute; left: 54px; white-space: nowrap; background: var(--navy); color: #fff; padding: 5px 8px; border-radius: 4px; font-size: 10px; opacity: 0; pointer-events: none; transform: translateX(-4px); transition: opacity .15s; }.sidebar-link:hover .sidebar-label { opacity: 1; }.sidebar-settings { margin-top: auto; margin-bottom: 18px; font-size: 17px; }
+.app-content { padding: 56px 0 0 72px; min-height: 100vh; }.content-container { max-width: 1220px; padding: 31px 40px 48px; }.breadcrumb-line { color: #a4a8b9; font-size: 11px; margin-bottom: 8px; }.breadcrumb-line span { margin: 0 7px; color: #c3c6d2; }.page-heading { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; }.page-heading h1 { font-size: 27px; margin: 0 0 5px; font-weight: 750; letter-spacing: -.02em; }.page-heading p { margin: 0; color: var(--muted); font-size: 12px; }.add-button { background: var(--indigo); border: 0; border-radius: 6px; font-size: 11px; font-weight: 700; padding: 10px 16px; box-shadow: 0 5px 12px rgba(81,69,223,.18); }.add-button { display: inline-flex; align-items: center; }.add-button .icon { font-size: 13px; margin-right: 7px; }
+.applicant-panel { background: #fff; border: 1px solid #f0f1f6; border-radius: 10px; box-shadow: 0 8px 25px rgba(31,38,72,.04); overflow: hidden; }.applicant-toolbar { display: grid; grid-template-columns: minmax(210px, 1fr) 150px 165px auto; align-items: center; gap: 10px; padding: 17px 20px 15px; }.applicant-toolbar .form-control, .applicant-toolbar .form-select, .applicant-toolbar .input-group-text { color: #73798d; font-size: 11px; border-color: #ebedf3; height: 36px; }.applicant-toolbar .form-select { background-size: 10px; }.applicant-toolbar .input-group-text { border-right: 0; background: #fff; font-size: 19px; padding-right: 7px; color: #b0b5c3; }.search-control .form-control { border-left: 0; padding-left: 3px; }.toolbar-count { justify-self: end; white-space: nowrap; color: #9297a8; font-size: 12px; }.toolbar-count strong { color: #454a60; font-weight: 700; }.applicant-table { margin: 0; table-layout: fixed; min-width: 700px; }.applicant-table thead th { color: #a0a5b4; font-size: 10px; font-weight: 600; padding: 9px 20px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }.applicant-table thead th:nth-child(1) { width: 28%; }.applicant-table thead th:nth-child(2) { width: 24%; }.applicant-table thead th:nth-child(3) { width: 16%; }.applicant-table thead th:nth-child(4) { width: 17%; }.applicant-table thead th.actions-head { width: 15%; }.applicant-table tbody td { color: #606679; font-size: 11px; padding: 10px 20px; height: 52px; vertical-align: middle; border-color: #f1f2f6; }.candidate-cell { display: flex; align-items: center; gap: 9px; }.candidate-cell strong, .candidate-cell small { display: block; }.candidate-cell strong { color: #454a60; font-size: 11px; font-weight: 650; }.candidate-cell small { color: #adb1bd; font-size: 9px; margin-top: 3px; }.candidate-avatar { width: 27px; height: 27px; flex: 0 0 27px; display: grid; place-items: center; border-radius: 50%; background: #eeefff; color: #6259df; font-size: 9px; font-weight: 700; }.status-badge { border-radius: 10px; font-size: 9px; font-weight: 650; padding: 4px 12px; }.status-interview { color: #5274c4; background: #e0ecff; }.status-pending { color: #bb922d; background: #fff1c8; }.status-rejected { color: #d15b6a; background: #ffe0e2; }.status-hired { color: #3aa66d; background: #d8f8e7; }.actions-cell { display: flex; align-items: center; gap: 12px; }.view-button { color: #9ba1b1; padding: 0; font-size: 14px; line-height: 0; }.view-button:hover { color: var(--indigo); }.menu-button { color: #b3b8c6; }.empty-state { text-align: center; color: var(--muted) !important; padding: 30px !important; }.list-footer { display: flex; align-items: center; justify-content: space-between; padding: 11px 20px; color: #a0a5b5; font-size: 10px; }.app-pagination { margin: 0; gap: 5px; }.app-pagination .page-link { border: 1px solid #edf0f5; border-radius: 4px !important; color: #858b9d; min-width: 25px; height: 25px; padding: 4px 8px; text-align: center; font-size: 10px; white-space: nowrap; }.app-pagination .active .page-link { background: var(--indigo); border-color: var(--indigo); color: #fff; }
+@media (max-width: 768px) { .app-topbar { padding: 0 14px; }.topbar-links { display: none; }.app-sidebar { width: 56px; }.sidebar-mark { margin-bottom: 15px; }.sidebar-link { width: 38px; }.app-content { padding-left: 56px; }.content-container { padding: 24px 16px; }.page-heading { align-items: flex-start; gap: 16px; }.page-heading h1 { font-size: 22px; }.page-heading p { line-height: 1.5; }.add-button { flex-shrink: 0; }.applicant-toolbar { grid-template-columns: 1fr; }.toolbar-count { justify-self: start; }.list-footer { align-items: flex-start; gap: 12px; flex-direction: column; } }
+
+/* Scale the desktop layout to match the reference proportions. */
+.app-shell { font-size: 15px; }
+.app-topbar { height: 64px; padding: 0 36px 0 30px; }
+.brand-name { min-width: 58px; margin: 0 42px 0 4px; padding: 0; font-size: 16px; letter-spacing: .1em; line-height: 1; text-align: center; }
+.topbar-links { gap: 31px; font-size: 13px; }
+.topbar-actions { gap: 28px; }
+.notification-button { font-size: 21px; }
+.profile-button { width: 36px; height: 36px; display: flex !important; align-items: center; justify-content: center; padding: 0 !important; margin-right: 8px; font-size: 12px; line-height: 1; text-align: center; }
+.profile-button.dropdown-toggle::after { content: none; display: none !important; }
+.profile-initials { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; line-height: 1; transform: none; }
+.app-sidebar { top: 64px; width: 84px; padding-top: 24px; }
+.sidebar-mark { width: 34px; height: 34px; font-size: 16px; margin-bottom: 30px; }
+.sidebar-link { width: 52px; height: 52px; font-size: 23px; margin: 3px 0; }
+.sidebar-label { left: 62px; font-size: 12px; padding: 6px 9px; }
+.sidebar-settings { margin-bottom: 24px; font-size: 20px; }
+.app-content { padding: 0 0 0 84px; }
+.content-container { max-width: 1440px; padding: 42px 52px 60px; }
+.breadcrumb-line { font-size: 13px; margin-bottom: 10px; }
+.page-heading { margin-bottom: 30px; }
+.page-heading h1 { font-size: 34px; margin-bottom: 7px; }
+.page-heading p { font-size: 15px; }
+.add-button {
+    border-radius: 7px;
+    font-size: 16px;
+    padding: 13px 20px;
+    display: flex !important;
+    white-space: nowrap;
+}
+/* =========================
+   STATUS BADGE
+   ========================= */
+
+.applicant-table .badge.status-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    width: 113px !important;
+    height: 28px !important;
+    padding: 0 !important;
+
+    border-radius: 50px !important;
+    font-size: 13px !important;
+    font-weight: 400 !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.applicant-table .badge.status-badge.status-interview {
+    background: #e3edff !important;
+    background-color: #e3edff !important;
+    color: #4d6594 !important;
+}
+
+.applicant-table .badge.status-badge.status-pending {
+    background: #fff8cc !important;
+    background-color: #fff8cc !important;
+    color: #806b2a !important;
+}
+
+.applicant-table .badge.status-badge.status-rejected {
+    background: #f9e3e5 !important;
+    background-color: #f9e3e5 !important;
+    color: #92545b !important;
+}
+
+.applicant-table .badge.status-badge.status-hired {
+    background: #dff7ea !important;
+    background-color: #dff7ea !important;
+    color: #3c8060 !important;
+}
+.applicant-panel { border-radius: 12px; }
+.applicant-toolbar { grid-template-columns: minmax(280px, 1fr) 190px 220px auto; gap: 16px; padding: 22px 24px 18px; }
+.applicant-toolbar .form-control, .applicant-toolbar .form-select, .applicant-toolbar .input-group-text { font-size: 14px; height: 44px; }
+.applicant-toolbar .input-group-text { font-size: 22px; }
+.toolbar-count { font-size: 14px; }
+.applicant-table { min-width: 800px; }
+.applicant-table thead th { font-size: 13px; padding: 12px 24px; }
+.applicant-table tbody td { font-size: 14px; padding: 13px 24px; height: 64px; }
+.candidate-cell { gap: 12px; }
+.candidate-cell strong { font-size: 14px; }
+.candidate-cell small { font-size: 12px; margin-top: 4px; }
+.candidate-avatar { width: 34px; height: 34px; flex-basis: 34px; font-size: 11px; }
+.status-badge { border-radius: 12px; font-size: 12px; padding: 5px 14px; }
+.actions-cell { gap: 14px; }
+.view-button { font-size: 19px; }
+.menu-button { font-size: 17px; }
+.list-footer { padding: 15px 24px; font-size: 13px; }
+.app-pagination { gap: 6px; }
+.app-pagination .page-link { min-width: 30px; height: 30px; padding: 5px; font-size: 12px; }
+
+@media (max-width: 768px) {
+	.app-topbar { padding: 0 16px; }
+	.brand-name { margin-right: 0; }
+	.app-sidebar { width: 60px; }
+	.sidebar-mark { margin-bottom: 18px; }
+	.sidebar-link { width: 44px; height: 44px; }
+	.app-content { padding-left: 60px; }
+	.content-container { padding: 28px 16px 40px; }
+	.page-heading h1 { font-size: 28px; }
+}

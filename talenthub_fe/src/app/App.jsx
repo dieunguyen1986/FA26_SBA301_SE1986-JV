@@ -3,6 +3,7 @@ import { useState } from 'react'
 import ProductList from '../shared/demo/ProductList';
 import Register from '../modules/auths/pages/Register';
 import Login from '../modules/auths/pages/Login';
+import ApplicantList from '../modules/candidates/pages/ApplicantList';
 
 function App() {
   // Logic
@@ -15,7 +16,7 @@ function App() {
   // UI
   return (
     <>
-     <Register />
+     <ApplicantList />
     </>
   )
 }
