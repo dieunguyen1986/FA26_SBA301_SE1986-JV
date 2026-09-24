@@ -1,11 +1,13 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import App from './app/App.jsx'
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import App from "./app/App.jsx";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { BrowserRouter } from "react-router";
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <App /> 
+    
+      <App />
     {/* Composition */}
   </StrictMode>,
-)
+);
