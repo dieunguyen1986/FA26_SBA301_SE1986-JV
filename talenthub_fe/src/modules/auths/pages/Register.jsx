@@ -1,221 +1,256 @@
-import {useEffect, useRef, useState} from "react";
-import {Alert, Button, Col, Container, Form, Row} from "react-bootstrap";
-import {authsApi} from "../api/auths.api";
+import { useEffect, useRef, useState } from "react";
+import { Alert, Button, Col, Container, Form, Row } from "react-bootstrap";
+import { authsApi } from "../api/auths.api";
+import { data, useNavigate } from "react-router";
 
 const Register = () => {
-    // Logic
-    const [fullName, setFullName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [message, setMessage] = useState({type: null, content: ""});
-    const [errorMessages, setErrorMessages] = useState([]);
-    const fullNameRef = useRef(null);
-    const emailRef = useRef(null);
-    const passRef = useRef(null);
-    // [{target: password, message: ""}]
+  // Logic
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState({ type: null, content: "" });
+  const [resMessage, setResMessage] = useState("");
+  const [errorMessages, setErrorMessages] = useState([]);
+  const fullNameRef = useRef(null);
+  const emailRef = useRef(null);
+  const passRef = useRef(null);
+  // [{target: password, message: ""}]
 
-    useEffect(() => {
-        document.title = "Register";
+  const navigate = useNavigate();
 
-        fullNameRef.current?.focus();
+  useEffect(() => {
+    document.title = "Register";
 
-        return () => {
-            document.title = "Applicant Tracking System";
-        };
-    }, []);
+    fullNameRef.current?.focus();
 
-    useEffect(() => {
-        if (!message.type) return;
-
-        const timer = setTimeout(() => {
-            setMessage({type: null, content: ""});
-        }, 3000);
-
-        return () => {
-            clearTimeout(timer);
-        };
-    }, [message]);
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        // Validate
-        console.log(`Fullname: ${fullName}`);
-
-        // Call API
-        const payload = {fullName: fullName, email: email, password: password};
-
-        const isValid = validate(payload);
-
-        console.log(
-            "Email error: " + errorMessages.some((error) => error.target === "email"),
-        );
-
-        if (!isValid) {
-            console.log("Error Message: " + errorMessages);
-            return;
-        }
-        try {
-            const response = await authsApi.register(payload);
-
-            setMessage({type: "success", content: response.message});
-        } catch (error) {
-            console.log(error);
-            setMessage({
-                type: "error",
-                content: error?.message || "Register Fail",
-            });
-        }
-
+    return () => {
+      document.title = "Applicant Tracking System";
     };
+  }, []);
 
-    const validate = (payload) => {
-        setErrorMessages([]);
-        const errors = [];
+  useEffect(() => {
+    if (!message.type) return;
 
-        const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{5,}$/;
-        const PASSWORD_REGEX = /^[A-Za-z0-9%!@]{5}$/;
+    const timer = setTimeout(() => {
+      setMessage({ type: null, content: "" });
+    }, 3000);
 
-        if (!EMAIL_REGEX.test(payload.email)) {
-            errors.push({
-                target: "email",
-                message: "Email is invalid format!",
-            });
-
-        }
-
-        if (!PASSWORD_REGEX.test(payload.password)) {
-            errors.push({
-                target: "password",
-                message: "Password must contain exactly 5 characters!",
-            });
-        }
-
-        setErrorMessages(errors);
-
-        console.log(errorMessages);
-
-        return (errors.length === 0);
+    return () => {
+      clearTimeout(timer);
     };
+  }, [message]);
 
-    // UI
-    return (
-        <Container className="">
-            <Row className="d-flex justify-content-center mt-3">
-                <Col md={6} className="p-5 rounded-5 border">
-                    <h2 className="d-flex justify-content-center">Create an Account</h2>
-                    <p className="d-flex justify-content-center">
-                        Join our talent community to track your applications.
-                    </p>
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-                    <Button
-                        variant="light"
-                        className="py-3 mt-3 border rounded-5"
-                        style={{width: "100%"}}
-                    >
-                        Continue with Google
-                    </Button>
-                    <Button
-                        variant="light"
-                        className="py-3 mt-3 border rounded-5"
-                        style={{width: "100%"}}
-                    >
-                        Continue with LinkedIn
-                    </Button>
-                    {message.type ? (
-                        <Alert
-                            className="mt-3"
-                            variant={message.type === "error" ? "danger" : "success"}
-                        >
-                            {message.content}
-                        </Alert>
-                    ) : (
-                        ""
-                    )}
+    setResMessage("");
 
-                    <hr/>
-                    <Form className="g-3" onSubmit={handleSubmit}>
-                        <Form.Group className="mb-3 mt-3" controlId="fullName">
-                            <Form.Label>Full Name</Form.Label>
-                            <Form.Control
-                                ref={fullNameRef}
-                                className="py-3"
-                                type="text"
-                                placeholder="e.g Nguyen Van A"
-                                name="fullName"
-                                value={fullName}
-                                onChange={(e) => {
-                                    setFullName(e.target.value);
-                                }}
-                            />
-                        </Form.Group>
+    // Validate
+    console.log(`Fullname: ${fullName}`);
 
-                        {errorMessages.some((error) => error.target === "email") ? (
-                            <Alert variant="danger">
-                                {
-                                    errorMessages.find((error) => error.target === "email")
-                                        .message
-                                }
-                            </Alert>
-                        ) : (
-                            ""
-                        )}
-                        <Form.Group className="mb-3 mt-3" controlId="email">
-                            <Form.Label>Email address</Form.Label>
-                            <Form.Control
-                                ref={emailRef}
-                                type="email"
-                                className="py-3"
-                                placeholder="you@example.com"
-                                value={email}
-                                onChange={(e) => {
-                                    setEmail(e.target.value);
-                                }}
-                            />
-                        </Form.Group>
-                        {errorMessages.some((error) => error.target === "password") ? (
-                            <Alert variant="danger">
-                                {
-                                    errorMessages.find((error) => error.target === "password")
-                                        .message
-                                }
-                            </Alert>
-                        ) : (
-                            ""
-                        )}
-                        <Form.Group className="mb-3 mt-3" controlId="password">
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control
-                                ref={passRef}
-                                type="password"
-                                className="py-3"
-                                placeholder="********"
-                                value={password}
-                                onChange={(e) => {
-                                    setPassword(e.target.value);
-                                }}
-                            />
-                        </Form.Group>
+    // Call API
+    const payload = { fullName: fullName, email: email, password: password };
 
-                        <Button
-                            type="submit"
-                            variant="info"
-                            className="py-3 my-3"
-                            style={{width: "100%"}}
-                        >
-                            Create Account
-                        </Button>
-                    </Form>
-                    <div className="d-flex justify-content-center">
-                        Already have an account?{" "}
-                        <span>
+    const isValid = validate(payload);
+
+    console.log(
+      "Email error: " + errorMessages.some((error) => error.target === "email"),
+    );
+
+    if (!isValid) {
+      console.log("Error Message: " + errorMessages);
+      return;
+    }
+
+    authsApi
+      .register(payload)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Register fail!");
+        }
+
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        setResMessage("Register succesfull!");
+      })
+      .catch((error) => {
+        setErrorMessages(error?.message);
+      });
+
+    // try {
+    //     const response = await authsApi.register(payload);
+
+    //     setMessage({type: "success", content: response.message});
+    // } catch (error) {
+    //     console.log(error);
+    //     setMessage({
+    //         type: "error",
+    //         content: error?.message || "Register Fail",
+    //     });
+    // }
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setResMessage("");
+      //   navigate("/login");
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [resMessage]);
+
+  const validate = (payload) => {
+    setErrorMessages([]);
+    const errors = [];
+
+    const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const PASSWORD_REGEX = /^[A-Za-z0-9%!@]{5}$/;
+
+    if (!EMAIL_REGEX.test(payload.email)) {
+      errors.push({
+        target: "email",
+        message: "Email is invalid format!",
+      });
+    }
+
+    if (!PASSWORD_REGEX.test(payload.password)) {
+      errors.push({
+        target: "password",
+        message: "Password must contain exactly 5 characters!",
+      });
+    }
+
+    setErrorMessages(errors);
+
+    console.log(errorMessages);
+
+    return errors.length === 0;
+  };
+
+  // UI
+  return (
+    <Container className="">
+      <Row className="d-flex justify-content-center mt-3">
+        <Col md={6} className="p-5 rounded-5 border">
+          <h2 className="d-flex justify-content-center">Create an Account</h2>
+          <p className="d-flex justify-content-center">
+            Join our talent community to track your applications.
+          </p>
+
+          <Button
+            variant="light"
+            className="py-3 mt-3 border rounded-5"
+            style={{ width: "100%" }}
+          >
+            Continue with Google
+          </Button>
+          <Button
+            variant="light"
+            className="py-3 mt-3 border rounded-5"
+            style={{ width: "100%" }}
+          >
+            Continue with LinkedIn
+          </Button>
+          {message.type ? (
+            <Alert
+              className="mt-3"
+              variant={message.type === "error" ? "danger" : "success"}
+            >
+              {message.content}
+            </Alert>
+          ) : (
+            ""
+          )}
+
+          <hr />
+
+          {resMessage && <Alert className="success">{resMessage}</Alert>}
+          {errorMessages && <Alert className="danger">{errorMessages}</Alert>}
+
+          <Form className="g-3" onSubmit={handleSubmit}>
+            <Form.Group className="mb-3 mt-3" controlId="fullName">
+              <Form.Label>Full Name</Form.Label>
+              <Form.Control
+                ref={fullNameRef}
+                className="py-3"
+                type="text"
+                placeholder="e.g Nguyen Van A"
+                name="fullName"
+                value={fullName}
+                onChange={(e) => {
+                  setFullName(e.target.value);
+                }}
+              />
+            </Form.Group>
+
+            {errorMessages.some((error) => error.target === "email") ? (
+              <Alert variant="danger">
+                {
+                  errorMessages.find((error) => error.target === "email")
+                    .message
+                }
+              </Alert>
+            ) : (
+              ""
+            )}
+            <Form.Group className="mb-3 mt-3" controlId="email">
+              <Form.Label>Email address</Form.Label>
+              <Form.Control
+                ref={emailRef}
+                type="email"
+                className="py-3"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
+              />
+            </Form.Group>
+            {errorMessages.some((error) => error.target === "password") ? (
+              <Alert variant="danger">
+                {
+                  errorMessages.find((error) => error.target === "password")
+                    .message
+                }
+              </Alert>
+            ) : (
+              ""
+            )}
+            <Form.Group className="mb-3 mt-3" controlId="password">
+              <Form.Label>Password</Form.Label>
+              <Form.Control
+                ref={passRef}
+                type="password"
+                className="py-3"
+                placeholder="********"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+              />
+            </Form.Group>
+
+            <Button
+              type="submit"
+              variant="info"
+              className="py-3 my-3"
+              style={{ width: "100%" }}
+            >
+              Create Account
+            </Button>
+          </Form>
+          <div className="d-flex justify-content-center">
+            Already have an account?{" "}
+            <span>
               <a>Sign in</a>
             </span>
-                    </div>
-                </Col>
-            </Row>
-        </Container>
-    );
+          </div>
+        </Col>
+      </Row>
+    </Container>
+  );
 };
 
 export default Register;

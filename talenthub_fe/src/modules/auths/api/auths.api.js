@@ -17,10 +17,13 @@ let users = [
 
 export const authsApi = {
   register: async (payload) => {
-    // fetch
     console.log(`Auth Appi: ${payload.fullName}`);
 
-    return { message: "Register successful!" };
+    // fetch
+    return fetch("http://localhost:3000/candidates", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
   },
   login: async (credential) => {
     return {
