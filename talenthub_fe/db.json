@@ -55,5 +55,25 @@
       "id": "yG4dVdoY7EE"
     }
   ],
+  "users": [
+    {
+      "email": "hieu@gmail.com",
+      "password": "123",
+      "fullName": "Nguyen Van Hieu",
+      "roles": [
+        "CANDIDATE"
+      ],
+      "authToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE1MTYyNDI2MjJ9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+    },
+    {
+      "email": "hoa@gmail.com",
+      "password": "123",
+      "fullName": "Nguyen Thi Hoa",
+      "roles": [
+        "ADMIN"
+      ],
+      "authToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE1MTYyNDI2MjJ9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+    }
+  ],
   "$schema": "./node_modules/json-server/schema.json"
 }

@@ -1,3 +1,5 @@
+import { axiosClient } from "../../../shared/api/axiosClient";
+
 let users = [
   {
     email: "hieu@gmail.com",
@@ -26,14 +28,19 @@ export const authsApi = {
     });
   },
   login: async (credential) => {
+    const response = await axiosClient.get("/users");
+    const user = response.data.find(
+      (user) =>
+        user.email === credential.email &&
+        user.password === credential.password,
+    );
+
+    if (!user) {
+      throw new Error("Credential is wrong!");
+    }
+
     return {
-      data: users.find((user) => {
-        if (
-          user.email === credential.email &&
-          user.password === credential.password
-        )
-          return user;
-      }),
+      data: user,
     };
   },
 };
