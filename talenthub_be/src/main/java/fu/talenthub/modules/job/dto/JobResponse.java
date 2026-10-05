@@ -3,10 +3,11 @@ package fu.talenthub.modules.job.dto;
 import lombok.Data;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 @Data
 public class JobResponse {
-    private Long id;
+    private UUID id;
     private Long departmentId;
     private Long recruiterId;
     private String title;

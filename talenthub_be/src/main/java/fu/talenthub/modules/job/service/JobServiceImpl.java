@@ -26,7 +26,7 @@ public class JobServiceImpl implements JobService {
         // Call Repo & map to response
         Job result = jobRepository.save(toEntity(request));
         log.info("Result {}", result.getTitle());
-        return new JobResponse();
+        return toDto(result);
     }
 
     private Job toEntity(JobCreationRequest request) {
@@ -43,5 +43,24 @@ public class JobServiceImpl implements JobService {
                 .build();
 
         return job;
+    }
+
+    private JobResponse toDto(Job job) {
+        JobResponse response = new JobResponse();
+        response.setTitle(job.getTitle());
+        response.setDescription(job.getDescription());
+        response.setLocation(job.getLocation());
+        response.setSalaryMin(job.getSalaryMin());
+        response.setSalaryMax(job.getSalaryMax());
+        response.setStatus(job.getStatus() != null ? job.getStatus().name() : null);
+        response.setUtmSource(job.getUtmSource());
+        response.setUtmMedium(job.getUtmMedium());
+        response.setDeadline(job.getDeadline());
+        response.setPublishedAt(job.getPublishedAt());
+        response.setCreatedAt(job.getCreatedAt());
+        response.setUpdatedAt(job.getUpdatedAt());
+        response.setCreatedBy(job.getCreatedBy());
+        response.setUpdatedBy(job.getUpdatedBy());
+        return response;
     }
 }
