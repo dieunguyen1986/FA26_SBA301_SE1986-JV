@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Alert, Button, Col, Container, Form, Row } from "react-bootstrap";
 import { authsApi } from "../api/auths.api";
-import { data, useNavigate } from "react-router";
+import {data, Link, useNavigate} from "react-router";
 
 const Register = () => {
   // Logic
@@ -244,7 +244,7 @@ const Register = () => {
           <div className="d-flex justify-content-center">
             Already have an account?{" "}
             <span>
-              <a>Sign in</a>
+              <Link to="/login">Sign in</Link>
             </span>
           </div>
         </Col>

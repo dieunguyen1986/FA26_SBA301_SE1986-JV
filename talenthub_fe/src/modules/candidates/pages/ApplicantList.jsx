@@ -37,7 +37,7 @@ const ApplicantList = () => {
     <Container fluid className="p-5 bg-light border rounded-3">
       <Row>
         <Col md={12}>
-          <h1>PRODUCT LIST</h1>
+          <h1>CANDIDATE LIST</h1>
           <hr />
           <Row className="g-2 my-3 mb-5">
             <Form className="d-flex justify-content-left">
