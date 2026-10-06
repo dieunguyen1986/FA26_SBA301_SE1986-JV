@@ -21,12 +21,11 @@ import { NavLink } from 'react-router'
 //     ],
 //   },
 //   {
-//     label: 'Tuyển dụng',
+//     label: 'Cấu hình,
 //     items: [
-//       { label: 'Tin tuyển dụng', to: '/admin/jobs', icon: Briefcase },
-//       { label: 'Ứng viên', to: '/admin/candidates', icon: People },
-//       { label: 'Lịch phỏng vấn', to: '/admin/interviews', icon: Calendar3 },
-//       { label: 'Kho hồ sơ', to: '/admin/talent-pool', icon: PersonVcard },
+//       { label: 'Phòng ban', to: '/admin/jobs', icon: Briefcase },
+//       { label: 'Account', to: '/admin/candidates', icon: People },
+
 //     ],
 //   },
 //   {
@@ -34,10 +33,41 @@ import { NavLink } from 'react-router'
 //     items: [
 //       { label: 'Tin nhắn', to: '/admin/messages', icon: ChatDots, badge: 4 },
 //       { label: 'Thông báo', to: '/admin/notifications', icon: Bell },
-//       { label: 'Phân tích tuyển dụng', to: '/admin/analytics', icon: BarChart },
+
 //     ],
 //   },
 // ]
+
+const menuRecGroups = [
+  {
+    label: 'Tổng quan',
+    items: [
+      { label: 'Dashboard', to: '/recruiterrecruiter', icon: Grid1x2, end: true },
+    ],
+  },
+  {
+    label: 'Tin tuyển dụng',
+    items: [
+      { label: 'Ứng viên', to: '/recruiter/candidates', icon: Briefcase },
+      { label: 'Danh sách tin tuyển dụng', to: '/recruiter/jobs', icon: People },
+
+    ],
+  },
+  {
+    label: 'Kết nối & báo cáo',
+    items: [
+      { label: 'Tin nhắn', to: '/recruiter/messages', icon: ChatDots, badge: 4 },
+      { label: 'Thông báo', to: '/recruiter/notifications', icon: Bell },
+      { label: 'Phân tích tuyển dụng', to: '/admin/analytics', icon: BarChart }
+
+    ],},
+]
+
+
+
+//       { label: 'Lịch phỏng vấn', to: '/admin/interviews', icon: Calendar3 },
+//       { label: 'Kho hồ sơ', to: '/admin/talent-pool', icon: PersonVcard },
+//       ,
 
 const navLinkClass = ({ isActive }) => (
   `nav-link d-flex align-items-center gap-3 rounded-3 px-3 py-2 ${
@@ -78,6 +108,8 @@ const AdminSidebar = ({ onNavigate }) => {
                 </NavLink>
               {/*))*/}
             </div>
+
+
           </div>
 
         {/*))}*/}
@@ -106,7 +138,7 @@ const AdminSidebar = ({ onNavigate }) => {
             {/*{group.items.map(({ label, to, icon: Icon, end, badge }) => (*/}
             <NavLink
                 key="Job"
-                to="/admin/jobs"
+                to="/recruiter/jobs"
                 end={true}
                 onClick={onNavigate}
                 className={navLinkClass}

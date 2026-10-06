@@ -2,11 +2,16 @@ package fu.talenthub.modules.job.service;
 
 import fu.talenthub.modules.job.dto.JobCreationRequest;
 import fu.talenthub.modules.job.dto.JobResponse;
+import fu.talenthub.modules.job.entity.Department;
 import fu.talenthub.modules.job.entity.Job;
 import fu.talenthub.modules.job.entity.JobStatus;
+import fu.talenthub.modules.job.repository.DepartmentRepository;
 import fu.talenthub.modules.job.repository.JobRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
@@ -16,6 +21,7 @@ import java.time.OffsetDateTime;
 @Slf4j
 public class JobServiceImpl implements JobService {
     private final JobRepository jobRepository;
+    private final DepartmentRepository departmentRepository;
 
     @Override
     public JobResponse createJob(JobCreationRequest request) {
@@ -24,9 +30,25 @@ public class JobServiceImpl implements JobService {
 
         // Map to Entity
         // Call Repo & map to response
-        Job result = jobRepository.save(toEntity(request));
+        Job jobEntity = toEntity(request);
+        if (request.getDepartmentId() != null) {
+            Department department = departmentRepository.findById(request.getDepartmentId()).orElse(null);
+            if (department != null) {
+                jobEntity.setDepartment(department);
+            }
+        }
+        Job result = jobRepository.save(jobEntity);
+
         log.info("Result {}", result.getTitle());
         return toDto(result);
+    }
+
+    @Override
+    public Page<JobResponse> findAll(Integer index, Integer size) {
+        Pageable pageRequest = PageRequest.of(index, size);
+        return jobRepository.findAll(pageRequest).map((job) -> {
+            return toDto(job);
+        });
     }
 
     private Job toEntity(JobCreationRequest request) {

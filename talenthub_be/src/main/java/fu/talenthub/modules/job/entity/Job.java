@@ -2,10 +2,13 @@ package fu.talenthub.modules.job.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Nationalized;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -14,8 +17,8 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class Job {
+@SuperBuilder
+public class Job extends  BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -55,38 +58,10 @@ public class Job {
     @Column(name = "published_at")
     private OffsetDateTime publishedAt;
 
-    @Column(name = "created_at")
-    private OffsetDateTime createdAt;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_id", referencedColumnName = "id")
+    private Department department;
 
-    @Column(name = "updated_at")
-    private OffsetDateTime updatedAt;
-
-    @Nationalized
-    @Column(name = "created_by", length = 255)
-    private String createdBy;
-
-    @Column(name = "is_deleted")
-    private Boolean isDeleted;
-
-    @Nationalized
-    @Column(name = "updated_by", length = 255)
-    private String updatedBy;
-
-    @Column(name = "deleted_at")
-    private OffsetDateTime deletedAt;
-
-    @PrePersist
-    public void prePersist() {
-        if (this.isDeleted == null) {
-            this.isDeleted = false;
-        }
-        if (this.createdAt == null) {
-            this.createdAt = OffsetDateTime.now();
-        }
-    }
-
-    @PreUpdate
-    public void preUpdate() {
-        this.updatedAt = OffsetDateTime.now();
-    }
+    @OneToMany(mappedBy = "job")
+    private List<JobSkills> jobSkills = new ArrayList<>();
 }

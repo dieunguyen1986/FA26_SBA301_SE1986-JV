@@ -5,10 +5,7 @@ import fu.talenthub.modules.job.service.JobService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/jobs")
@@ -19,5 +16,13 @@ public class SecuredJobController {
     @PostMapping
     public ResponseEntity<?> createJob(@Valid @RequestBody JobCreationRequest request) {
         return ResponseEntity.ok(jobService.createJob(request));
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getJob(@RequestParam(name = "index", defaultValue = "0", required = false) Integer index,
+                                    @RequestParam(name = "size", defaultValue = "10", required = false) Integer size
+
+    ) {
+        return ResponseEntity.ok(jobService.findAll(index, size));
     }
 }
