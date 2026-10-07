@@ -2,14 +2,14 @@ import { useContext, useState } from "react";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router";
 import { authsApi } from "../api/auths.api";
-import AuthsProvider from "../../../app/provider/AuthsProvider";
 import { AuthsContext } from "../../../app/provider/AuthsContext";
+import { getRoleHomePath } from "../../../app/router/rolePaths";
 
 function Login({ onSwitchToRegister }) {
   const [user, setUser] = useState({ email: "", password: "" });
   const [message, setMessage] = useState(null);
   const navigate = useNavigate();
-  const {login} = useContext(AuthsContext);
+  const { login } = useContext(AuthsContext);
 
   const handleChange = (event) => {
     setUser({ ...user, [event.target.name]: event.target.value });
@@ -20,17 +20,17 @@ function Login({ onSwitchToRegister }) {
     try {
       const response = await authsApi.login(user);
       const resData = response.data;
+      const homePath = getRoleHomePath(resData.roles);
 
-      // Call method login in context to pass resData
-      login(resData);
-
-      if (resData.roles.includes("ADMIN")) {
-        navigate("/admin");
-      } else if (resData.roles.includes("CANDIDATE")) {
-        navigate("/");
+      if (!homePath) {
+        setMessage("This account does not have a supported role.");
+        return;
       }
+
+      login(resData);
+      navigate(homePath, { replace: true });
     } catch (error) {
-      setMessage(error?.message || "Credential is wrong!");
+      setMessage(error?.response?.data?.message || error?.message || "Credential is wrong!");
     }
   };
 
@@ -45,6 +45,7 @@ function Login({ onSwitchToRegister }) {
             <Card.Body className="p-4">
               <Card.Title className="text-center mb-4">Đăng nhập</Card.Title>
               <Form onSubmit={handleLogin}>
+                {message && <div className="alert alert-danger">{message}</div>}
                 <Form.Group className="mb-3" controlId="loginEmail">
                   <Form.Label>Email</Form.Label>
                   <Form.Control

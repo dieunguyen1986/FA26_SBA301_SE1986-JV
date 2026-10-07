@@ -73,6 +73,15 @@
         "ADMIN"
       ],
       "authToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE1MTYyNDI2MjJ9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+    },
+    {
+      "email": "recruiter@gmail.com",
+      "password": "123",
+      "fullName": "Nguyen Van Recruiter",
+      "roles": [
+        "RECRUITER"
+      ],
+      "authToken": "recruiter-test-token"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

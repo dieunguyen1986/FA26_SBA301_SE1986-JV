@@ -1,17 +1,19 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { AuthsContext } from "./AuthsContext";
 
 const AuthsProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    const userJson = localStorage.getItem("user");
 
-  useEffect(() => {
-    const setData = () => {
-      const userJson = localStorage.getItem("user");
-      setUser(JSON.parse(userJson));
-    };
+    if (!userJson) return null;
 
-    setData();
-  }, []);
+    try {
+      return JSON.parse(userJson);
+    } catch {
+      localStorage.removeItem("user");
+      return null;
+    }
+  });
 
   const login = useCallback((resData) => {
     // Change state
@@ -20,13 +22,11 @@ const AuthsProvider = ({ children }) => {
     // Store data to localStorage
     localStorage.setItem("user", JSON.stringify(resData));
 
-    console.log(localStorage.getItem("user"));
   }, []);
 
   const logout = useCallback(() => {
     localStorage.removeItem("user");
     setUser(null);
-    window.location.href = "/login";
   }, []);
 
   const contextValues = useMemo(

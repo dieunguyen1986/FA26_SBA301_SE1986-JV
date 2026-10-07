@@ -10,6 +10,8 @@ import {
   ThreeDots,
 } from 'react-bootstrap-icons'
 import { Link } from 'react-router'
+import { useContext } from 'react'
+import { AuthsContext } from '../../app/provider/AuthsContext'
 
 const summaryCards = [
   { label: 'Tin tuyển dụng đang mở', value: '24', change: '+3 tháng này', icon: Calendar3, color: 'primary' },
@@ -19,6 +21,9 @@ const summaryCards = [
 ]
 
 const AdminDashdoard = () => {
+  const { user } = useContext(AuthsContext)
+  const basePath = user?.roles?.includes('ADMIN') ? '/admin' : '/recruiter'
+
   return (
     <div>
       <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
@@ -27,7 +32,7 @@ const AdminDashdoard = () => {
           <h1 className="h3 fw-bold text-dark mb-1">Chào buổi sáng, Nguyễn Minh!</h1>
           <p className="text-muted mb-0">Theo dõi tiến độ tuyển dụng của đội ngũ trong hôm nay.</p>
         </div>
-        <Button as={Link} to="/admin/jobs" variant="primary" className="d-inline-flex align-items-center gap-2 align-self-start">
+        <Button as={Link} to={`${basePath}/jobs`} variant="primary" className="d-inline-flex align-items-center gap-2 align-self-start">
           <Plus size={18} /> Đăng tin tuyển dụng
         </Button>
       </div>
@@ -62,7 +67,7 @@ const AdminDashdoard = () => {
                 <h2 className="h5 fw-bold mb-1">Tin tuyển dụng nổi bật</h2>
                 <p className="text-muted small mb-0">Hiệu suất của các vị trí đang mở</p>
               </div>
-              <Button as={Link} to="/admin/jobs" variant="link" className="text-decoration-none p-0">
+              <Button as={Link} to={`${basePath}/jobs`} variant="link" className="text-decoration-none p-0">
                 Xem tất cả <ChevronRight size={15} />
               </Button>
             </Card.Header>
@@ -128,7 +133,7 @@ const AdminDashdoard = () => {
               </div>
             </Card.Body>
             <Card.Footer className="bg-white border-0 px-4 pb-4">
-              <Button as={Link} to="/admin/interviews" variant="light" className="w-100 text-primary">
+              <Button as={Link} to={`${basePath}/jobs`} variant="light" className="w-100 text-primary">
                 Mở danh sách công việc <ChevronRight size={15} />
               </Button>
             </Card.Footer>

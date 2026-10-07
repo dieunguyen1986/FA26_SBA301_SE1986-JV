@@ -8,7 +8,7 @@ import java.util.UUID;
 @Data
 public class JobResponse {
     private UUID id;
-    private Long departmentId;
+    private String departmentName;
     private Long recruiterId;
     private String title;
     private String description;

@@ -1,81 +1,21 @@
-import {
-  BarChart,
-  Bell,
-  Briefcase,
-  Building,
-  Calendar3,
-  ChatDots,
-  Gear,
-  Grid1x2,
-  People,
-  PersonVcard,
-  Search,
-} from 'react-bootstrap-icons'
-import { NavLink } from 'react-router'
+import { useContext } from "react";
+import { Building } from "react-bootstrap-icons";
+import { NavLink } from "react-router";
+import { AuthsContext } from "../../app/provider/AuthsContext";
+import { menuGroupsByRole } from "./adminSidebarMenu";
 
-// const menuGroups = [
-//   {
-//     label: 'Tổng quan',
-//     items: [
-//       { label: 'Dashboard', to: '/admin', icon: Grid1x2, end: true },
-//     ],
-//   },
-//   {
-//     label: 'Cấu hình,
-//     items: [
-//       { label: 'Phòng ban', to: '/admin/jobs', icon: Briefcase },
-//       { label: 'Account', to: '/admin/candidates', icon: People },
-
-//     ],
-//   },
-//   {
-//     label: 'Kết nối & báo cáo',
-//     items: [
-//       { label: 'Tin nhắn', to: '/admin/messages', icon: ChatDots, badge: 4 },
-//       { label: 'Thông báo', to: '/admin/notifications', icon: Bell },
-
-//     ],
-//   },
-// ]
-
-const menuRecGroups = [
-  {
-    label: 'Tổng quan',
-    items: [
-      { label: 'Dashboard', to: '/recruiterrecruiter', icon: Grid1x2, end: true },
-    ],
-  },
-  {
-    label: 'Tin tuyển dụng',
-    items: [
-      { label: 'Ứng viên', to: '/recruiter/candidates', icon: Briefcase },
-      { label: 'Danh sách tin tuyển dụng', to: '/recruiter/jobs', icon: People },
-
-    ],
-  },
-  {
-    label: 'Kết nối & báo cáo',
-    items: [
-      { label: 'Tin nhắn', to: '/recruiter/messages', icon: ChatDots, badge: 4 },
-      { label: 'Thông báo', to: '/recruiter/notifications', icon: Bell },
-      { label: 'Phân tích tuyển dụng', to: '/admin/analytics', icon: BarChart }
-
-    ],},
-]
-
-
-
-//       { label: 'Lịch phỏng vấn', to: '/admin/interviews', icon: Calendar3 },
-//       { label: 'Kho hồ sơ', to: '/admin/talent-pool', icon: PersonVcard },
-//       ,
-
-const navLinkClass = ({ isActive }) => (
+const navLinkClass = ({ isActive }) =>
   `nav-link d-flex align-items-center gap-3 rounded-3 px-3 py-2 ${
-    isActive ? 'active bg-primary text-white shadow-sm' : 'text-secondary'
-  }`
-)
+    isActive ? "active bg-primary text-white shadow-sm" : "text-secondary"
+  }`;
 
 const AdminSidebar = ({ onNavigate }) => {
+  const { user } = useContext(AuthsContext);
+  const isAdmin = user?.roles?.includes("ADMIN");
+  const role = isAdmin ? "ADMIN" : "RECRUITER";
+  const menuGroups = menuGroupsByRole[role];
+  const roleLabel = isAdmin ? "Tài khoản quản trị" : "Tài khoản nhà tuyển dụng";
+
   return (
     <aside className="d-flex flex-column min-vh-100 p-3">
       <div className="d-flex align-items-center gap-2 px-2 mb-4">
@@ -84,82 +24,35 @@ const AdminSidebar = ({ onNavigate }) => {
         </span>
         <div>
           <div className="fw-semibold text-dark small">FPTU Hola</div>
-          <small className="d-block text-muted">Tài khoản nhà tuyển dụng</small>
+          <small className="d-block text-muted">{roleLabel}</small>
         </div>
       </div>
 
-      <nav aria-label="Menu nhà tuyển dụng">
-          <div key="overview" className="mb-4">
+      <nav aria-label="Menu quản lý">
+        {menuGroups.map((group) => (
+          <div key={group.label} className="mb-4">
             <small className="d-block text-uppercase px-3 mb-2 fw-bold">
-              TỔNG QUAN
+              {group.label}
             </small>
             <div className="d-grid gap-1">
-              {/*{group.items.map(({ label, to, icon: Icon, end, badge }) => (*/}
+              {group.items.map(({ label, to, icon: Icon, end }) => (
                 <NavLink
-                  key="Dashboard"
-                  to="/admin"
-                  end={true}
+                  key={to}
+                  to={to}
+                  end={end}
                   onClick={onNavigate}
                   className={navLinkClass}
                 >
-                  {/*<Icon size={18} />*/}
-                  <span className="flex-grow-1">Dashboard</span>
-                  {/*{badge && <span className="badge rounded-pill bg-danger">{badge}</span>}*/}
+                  <Icon size={18} />
+                  <span className="flex-grow-1">{label}</span>
                 </NavLink>
-              {/*))*/}
+              ))}
             </div>
-
-
           </div>
-
-        {/*))}*/}
-
-        <div key="recruiting" className="mb-4">
-          <small className="d-block text-uppercase fw-semibold px-3 mb-2 fw-bold">
-            TUYỂN DỤNG
-          </small>
-          <div className="d-grid gap-1">
-            {/*{group.items.map(({ label, to, icon: Icon, end, badge }) => (*/}
-            <NavLink
-                key="Candidate"
-                to="/admin/candidates"
-                end={true}
-                onClick={onNavigate}
-                className={navLinkClass}
-            >
-              {/*<Icon size={18} />*/}
-              <span className="flex-grow-1">Ứng viên</span>
-              {/*{badge && <span className="badge rounded-pill bg-danger">{badge}</span>}*/}
-            </NavLink>
-            {/*))*/}
-          </div>
-
-          <div className="d-grid gap-1">
-            {/*{group.items.map(({ label, to, icon: Icon, end, badge }) => (*/}
-            <NavLink
-                key="Job"
-                to="/recruiter/jobs"
-                end={true}
-                onClick={onNavigate}
-                className={navLinkClass}
-            >
-              {/*<Icon size={18} />*/}
-              <span className="flex-grow-1">Tin tuyển dụng</span>
-              {/*{badge && <span className="badge rounded-pill bg-danger">{badge}</span>}*/}
-            </NavLink>
-            {/*))*/}
-          </div>
-        </div>
+        ))}
       </nav>
-
-      <div className="mt-auto">
-        <NavLink to="/admin/settings" onClick={onNavigate} className={navLinkClass}>
-          <Gear size={18} />
-          <span>Cài đặt</span>
-        </NavLink>
-      </div>
     </aside>
-  )
-}
+  );
+};
 
-export default AdminSidebar
+export default AdminSidebar;

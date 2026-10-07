@@ -83,6 +83,7 @@ public class JobServiceImpl implements JobService {
         response.setUpdatedAt(job.getUpdatedAt());
         response.setCreatedBy(job.getCreatedBy());
         response.setUpdatedBy(job.getUpdatedBy());
+        response.setDepartmentName(job.getDepartment().getDepartmentName());
         return response;
     }
 }

@@ -21,8 +21,9 @@ spring:
         jdbc:
           time_zone: UTC
         dialect: org.hibernate.dialect.SQLServerDialect
-        show_sql: true;
+#        show_sql: true;
         format_sql: true
+    show-sql: true
 
 server:
   shutdown: graceful

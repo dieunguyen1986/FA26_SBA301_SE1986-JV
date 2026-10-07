@@ -1,22 +1,5 @@
 import { axiosClient } from "../../../shared/api/axiosClient";
 
-let users = [
-  {
-    email: "hieu@gmail.com",
-    password: "123",
-    fullName: "Nguyen Van Hieu",
-    roles: ["CANDIDATE"],
-    token: crypto.randomUUID(),
-  },
-  {
-    email: "hoa@gmail.com",
-    password: "123",
-    fullName: "Nguyen Thi Hoa",
-    roles: ["ADMIN"],
-    token: crypto.randomUUID(),
-  },
-];
-
 export const authsApi = {
   register: async (payload) => {
     console.log(`Auth Appi: ${payload.fullName}`);
@@ -28,19 +11,23 @@ export const authsApi = {
     });
   },
   login: async (credential) => {
-    const response = await axiosClient.get("/users");
-    const user = response.data.find(
+    const response = await axiosClient.get("http://localhost:3000/users");
+    const matchedUser = response.data.find(
       (user) =>
         user.email === credential.email &&
         user.password === credential.password,
     );
 
-    if (!user) {
+    if (!matchedUser) {
       throw new Error("Credential is wrong!");
     }
 
     return {
-      data: user,
+      data: {
+        ...matchedUser,
+        roles: Array.isArray(matchedUser.roles) ? matchedUser.roles : [],
+        authToken: matchedUser.authToken || matchedUser.token,
+      },
     };
   },
 };

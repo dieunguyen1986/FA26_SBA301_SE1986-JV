@@ -20,6 +20,9 @@ import { AuthsContext } from "../../app/provider/AuthsContext";
 const AdminHeader = ({ onMenuClick }) => {
   const { user, logout } = useContext(AuthsContext);
   const navigate = useNavigate();
+  const isAdmin = user?.roles?.includes("ADMIN");
+  const basePath = isAdmin ? "/admin" : "/recruiter";
+  const roleLabel = isAdmin ? "Admin" : "Recruiter";
 
   return (
     <Navbar
@@ -38,7 +41,7 @@ const AdminHeader = ({ onMenuClick }) => {
 
         <Navbar.Brand
           as={Link}
-          to="/admin"
+          to={basePath}
           className="d-flex align-items-center gap-2 me-lg-4"
         >
           <span className="d-flex align-items-center justify-content-center rounded-3 bg-primary text-white p-2">
@@ -46,7 +49,7 @@ const AdminHeader = ({ onMenuClick }) => {
           </span>
           <span>
             <span className="d-block fw-bold text-dark lh-1">TalentHub</span>
-            <small className="text-muted">Recruiter workspace</small>
+            <small className="text-muted">{roleLabel} workspace</small>
           </span>
         </Navbar.Brand>
 
@@ -90,15 +93,12 @@ const AdminHeader = ({ onMenuClick }) => {
                 <span className="d-block fw-semibold text-dark small">
                   {user?.fullName}
                 </span>
-                <small className="d-block text-muted">Recruiter</small>
+                <small className="d-block text-muted">{roleLabel}</small>
               </span>
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Header>Tài khoản tuyển dụng</Dropdown.Header>
-              <Dropdown.Item as={Link} to="/admin/company">
-                Hồ sơ công ty
-              </Dropdown.Item>
-              <Dropdown.Item as={Link} to="/admin/settings">
+              <Dropdown.Header>Tài khoản</Dropdown.Header>
+              <Dropdown.Item as={Link} to={`${basePath}/settings`}>
                 Cài đặt
               </Dropdown.Item>
               <Dropdown.Divider />
