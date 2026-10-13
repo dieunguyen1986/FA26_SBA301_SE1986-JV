@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Button,
   Card,
@@ -8,69 +8,66 @@ import {
   Row,
   Table,
 } from "react-bootstrap";
-import { ArrowCounterclockwise, Funnel, Search } from "react-bootstrap-icons";
-import { Pencil } from "react-bootstrap-icons";
+import { Plus, Search, XCircle } from "react-bootstrap-icons";
+import { Link } from "react-router";
+import { AuthsContext } from "../../../app/provider/AuthsContext";
 import { jobApi } from "../api/job.api";
 import CustomPagination from "../../../shared/components/CustomPagination";
+import { departmentApi } from "../api/department.api";
 
-const sampleJobs = [
-  {
-    id: 1,
-    title: "Senior Java Developer",
-    department: "Engineering",
-    recruitmentMonth: "2026-10",
-  },
-  {
-    id: 2,
-    title: "UI/UX Designer",
-    department: "Design",
-    recruitmentMonth: "2026-10",
-  },
-  {
-    id: 3,
-    title: "DevOps Engineer",
-    department: "Engineering",
-    recruitmentMonth: "2026-09",
-  },
-  {
-    id: 4,
-    title: "Product Manager",
-    department: "Product",
-    recruitmentMonth: "2026-08",
-  },
-  {
-    id: 5,
-    title: "Digital Marketing Specialist",
-    department: "Marketing",
-    recruitmentMonth: "2026-08",
-  },
-];
+const monthOptions = Array.from({ length: 12 }, (_, index) => {
+  const month = index + 1;
 
-const departments = [...new Set(sampleJobs.map((job) => job.department))];
+  return { value: String(month), label: `Tháng ${month}` };
+});
 
-const monthOptions = [
-  { value: "2026-10", label: "Tháng 10/2026" },
-  { value: "2026-09", label: "Tháng 09/2026" },
-  { value: "2026-08", label: "Tháng 08/2026" },
-];
+const currentYear = new Date().getFullYear();
+const yearOptions = [currentYear, currentYear - 1];
 
 const formatRecruitmentMonth = (month) => {
   const [year, monthNumber] = month.split("-");
   return `Tháng ${monthNumber}/${year}`;
 };
 
-const JobList = () => {
-  const [titleQuery, setTitleQuery] = useState("");
-  const [department, setDepartment] = useState("");
-  const [recruitmentMonth, setRecruitmentMonth] = useState("");
+const RecruitmentJobList = () => {
+  const { user } = useContext(AuthsContext);
+  const jobsBasePath = user?.roles?.includes("ADMIN") ? "/admin" : "/recruiter";
+
   const [jobs, setJobs] = useState([]); // State to hold the list of jobs
+  const [departments, setDepartments] = useState([]); // State to hold the list of departments
+
   const [currentPage, setCurrentPage] = useState(0); // State to hold the current page
   const [totalPages, setTotalPages] = useState(0); // State to hold the total number of pages
 
-  const getJobsByPage = async ({ index, size }) => {
+  const [searchParams, setSearchParams] = useState({
+    title: "",
+    departmentId: "",
+    recruitmentMonth: "",
+    recruitmentYear: "",
+  });
+
+  const handleSearch = async (event) => {
+    event.preventDefault();
+
+    console.log("Search parameters:", searchParams);
+
+    await getJobsByPage({ index: 0, size: 10, filters: searchParams }); // Fetch jobs based on search parameters
+
+    // setSearchParams({
+    //   title: titleQuery.trim(),
+    //   department,
+    //   recruitmentMonth,
+    //   recruitmentYear,
+    // });
+  };
+
+  const getJobsByPage = async ({ index, size, filters = searchParams }) => {
     try {
-      // Simulate API call
-      const response = await jobApi.getJobs({ index, size }); // Fetch jobs from API with pagination parameters
+      const response = await jobApi.getJobs({
+        index,
+        size,
+        filters,
+      }); // Fetch jobs from API with pagination parameters
 
       const data = await response.data;
 
@@ -83,18 +80,33 @@ const JobList = () => {
     }
   };
   useEffect(() => {
-    const fetchJobs = async () => {
-      getJobsByPage({ index: 0, size: 2 }); // Fetch the first page of jobs with a size of 2
+    const fetchData = async () => {
+      getJobsByPage({ index: 0, size: 10 }); // Fetch the first page of jobs with a size of 2
+
+      // List departments
+
+      try {
+        const response = await departmentApi.getAllDepartments();
+        const data = await response.data;
+        setDepartments(data); // Update the state with the fetched departments
+
+      } catch (error) {
+        console.error("Error fetching departments:", error);
+      }
     };
 
-    fetchJobs();
+    fetchData();
   }, []); // Fetch jobs from API or other source and setJobs
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
     // Fetch jobs for the selected page from API or other source and update the jobs state
 
-    getJobsByPage({ index: pageNumber - 1, size: 2 }); // Fetch jobs for the selected page
+    getJobsByPage({
+      index: pageNumber - 1,
+      size: 10,
+      filters: searchParams,
+    }); // Fetch jobs for the selected page
   };
 
   // const filteredJobs = useMemo(() => {
@@ -110,9 +122,12 @@ const JobList = () => {
   // }, [department, recruitmentMonth, titleQuery])
 
   const resetFilters = () => {
-    setTitleQuery("");
-    setDepartment("");
-    setRecruitmentMonth("");
+    setSearchParams({
+      title: "",
+      department: "",
+      recruitmentMonth: "",
+      recruitmentYear: "",
+    });
   };
 
   return (
@@ -120,18 +135,11 @@ const JobList = () => {
       <Card className="border-0 shadow-sm mb-4">
         <Card.Body className="p-3 p-md-4">
           <div className="d-flex align-items-center gap-2 mb-3">
-            <span className="rounded-3 bg-light text-primary p-2">
-              <Funnel size={18} />
-            </span>
             <div>
-              <h2 className="h5 fw-bold mb-1">Tìm kiếm tin tuyển dụng</h2>
-              <p className="text-muted small mb-0">
-                Lọc danh sách theo tiêu đề, phòng ban hoặc tháng tuyển dụng.
-              </p>
+              <h2 className="fw-bold mb-1">Quản lý tin tức tuyển dụng</h2>
             </div>
           </div>
-
-          <Form>
+          <Form onSubmit={handleSearch}>
             <Row className="g-3 align-items-end">
               <Col md={5} lg={5}>
                 <Form.Group controlId="job-title-search">
@@ -145,44 +153,57 @@ const JobList = () => {
                     <Form.Control
                       type="search"
                       placeholder="Nhập tiêu đề cần tìm..."
-                      value={titleQuery}
-                      onChange={(event) => setTitleQuery(event.target.value)}
+                      value={searchParams.title}
+                      onChange={(event) =>
+                        setSearchParams({
+                          ...searchParams,
+                          title: event.target.value,
+                        })
+                      }
                     />
                   </InputGroup>
                 </Form.Group>
               </Col>
 
-              <Col md={3} lg={3}>
+              <Col md={3} lg={2}>
                 <Form.Group controlId="job-department-filter">
                   <Form.Label className="small fw-semibold text-secondary">
                     Phòng ban
                   </Form.Label>
                   <Form.Select
-                    value={department}
-                    onChange={(event) => setDepartment(event.target.value)}
+                    value={searchParams.departmentId}
+                    onChange={(event) => {
+                      setSearchParams({
+                        ...searchParams,
+                        departmentId: event.target.value,
+                      });
+                    }}
                   >
                     <option value="">Tất cả phòng ban</option>
-                    {departments.map((item) => (
-                      <option key={item} value={item}>
-                        {item}
+                    {departments.map((department) => (
+                      <option key={department.id} value={department.id}>
+                        {department.departmentName}
                       </option>
                     ))}
                   </Form.Select>
                 </Form.Group>
               </Col>
 
-              <Col md={4} lg={3}>
+              <Col md={4} lg={2}>
                 <Form.Group controlId="job-month-filter">
                   <Form.Label className="small fw-semibold text-secondary">
-                    Tháng tuyển dụng
+                    Tháng
                   </Form.Label>
                   <Form.Select
-                    value={recruitmentMonth}
+                    value={searchParams.recruitmentMonth}
                     onChange={(event) =>
-                      setRecruitmentMonth(event.target.value)
+                      setSearchParams({
+                        ...searchParams,
+                        recruitmentMonth: event.target.value,
+                      })
                     }
                   >
-                    <option value="">Tất cả các tháng</option>
+                    <option value="">Tất cả tháng</option>
                     {monthOptions.map((item) => (
                       <option key={item.value} value={item.value}>
                         {item.label}
@@ -192,17 +213,41 @@ const JobList = () => {
                 </Form.Group>
               </Col>
 
+              <Col md={4} lg={2}>
+                <Form.Group controlId="job-year-filter">
+                  <Form.Label className="small fw-semibold text-secondary">
+                    Năm
+                  </Form.Label>
+                  <Form.Select
+                    value={searchParams.recruitmentYear}
+                    onChange={(event) =>
+                      setSearchParams({
+                        ...searchParams,
+                        recruitmentYear: event.target.value,
+                      })
+                    }
+                  >
+                    <option value="">Tất cả năm</option>
+                    {yearOptions.map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+
               <Col md={12} lg={1}>
-                <Button
-                  type="button"
-                  variant="light"
-                  className="w-100 text-primary border d-flex align-items-center justify-content-center gap-2"
-                  onClick={resetFilters}
-                  title="Xóa bộ lọc"
-                >
-                  <ArrowCounterclockwise size={16} />
-                  <span className="d-lg-none">Đặt lại</span>
-                </Button>
+                <div className="d-flex flex-column gap-2">
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    className="w-100 d-flex align-items-center justify-content-center gap-2"
+                  >
+                    <Search size={16} />
+                    Tìm kiếm
+                  </Button>
+                </div>
               </Col>
             </Row>
           </Form>
@@ -212,11 +257,17 @@ const JobList = () => {
       <Card className="border-0 shadow-sm">
         <Card.Header className="bg-white border-0 d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2 pt-4 px-3 px-md-4">
           <div>
-            <h2 className="h5 fw-bold mb-1">Danh sách tin tuyển dụng</h2>
-            <p className="text-muted small mb-0">
-              Hiển thị {jobs.length} tin tuyển dụng
-            </p>
+            {/*<h2 className="h6 fw-bold mb-1">Danh sách tin tuyển dụng</h2>*/}
           </div>
+          <Button
+            as={Link}
+            to={`${jobsBasePath}/jobs/new`}
+            variant="primary"
+            className="d-flex align-items-center gap-1 align-self-start"
+          >
+            <Plus size={17} />
+            Thêm mới
+          </Button>
         </Card.Header>
         <Card.Body className="px-0 px-md-2 pb-2">
           <Table responsive hover className="align-middle mb-0">
@@ -251,9 +302,26 @@ const JobList = () => {
                     {formatRecruitmentMonth(job.deadline)}
                   </td>
                   <td className="text-center">
-                    <Button variant="link" className="p-0 text-decoration-none">
-                      Xem chi tiết
-                    </Button>
+                    <div className="d-flex flex-column align-items-center gap-1">
+                      <Button
+                        as={Link}
+                        to={`${jobsBasePath}/jobs/${job.id}`}
+                        state={{ job }}
+                        variant="link"
+                        className="p-0 text-decoration-none"
+                      >
+                        Xem chi tiết
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="link"
+                        className="p-0 text-danger text-decoration-none d-flex align-items-center gap-1"
+                        title="Đóng tin tuyển dụng"
+                      >
+                        <XCircle size={12} />
+                        Đóng job
+                      </Button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -280,4 +348,4 @@ const JobList = () => {
   );
 };
 
-export default JobList;
+export default RecruitmentJobList;

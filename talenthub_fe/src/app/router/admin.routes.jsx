@@ -1,5 +1,7 @@
 import ApplicantList from "../../modules/candidates/pages/ApplicantList";
-import JobList from "../../modules/jobs/pages/JobList";
+import RecruitmentJobList from "../../modules/jobs/pages/RecruitmentJobList";
+import RecruitmentJobDetail from "../../modules/jobs/pages/RecruitmentJobDetail";
+import RecruitmentJobCreate from "../../modules/jobs/pages/RecruitmentJobCreate";
 import AdminDashdoard from "../../shared/components/AdminDashdoard";
 import AdminFeaturePage from "../../shared/components/AdminFeaturePage";
 import AdminLayout from "../layouts/AdminLayout";
@@ -15,7 +17,9 @@ export const adminRoutes = [
         children: [
           { index: true, element: <AdminDashdoard /> },
           { path: "candidates", element: <ApplicantList /> },
-          { path: "jobs", element: <JobList /> },
+          { path: "jobs", element: <RecruitmentJobList /> },
+          { path: "jobs/new", element: <RecruitmentJobCreate /> },
+          { path: "jobs/:jobId", element: <RecruitmentJobDetail /> },
           {
             path: "settings",
             element: (
@@ -37,7 +41,9 @@ export const adminRoutes = [
         element: <AdminLayout />,
         children: [
           { index: true, element: <AdminDashdoard /> },
-          { path: "jobs", element: <JobList /> },
+          { path: "jobs", element: <RecruitmentJobList /> },
+          { path: "jobs/new", element: <RecruitmentJobCreate /> },
+          { path: "jobs/:jobId", element: <RecruitmentJobDetail /> },
           { path: "candidates", element: <ApplicantList /> },
           {
             path: "settings",
