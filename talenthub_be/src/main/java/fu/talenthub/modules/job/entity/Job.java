@@ -18,6 +18,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
+@NamedQuery(name = "findByTitle", query = "FROM Job j WHERE j.title LIKE :keyword")
 public class Job extends  BaseEntity {
 
     @Id

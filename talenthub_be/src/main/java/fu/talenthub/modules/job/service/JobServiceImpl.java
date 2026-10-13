@@ -2,6 +2,7 @@ package fu.talenthub.modules.job.service;
 
 import fu.talenthub.modules.job.dto.JobCreationRequest;
 import fu.talenthub.modules.job.dto.JobResponse;
+import fu.talenthub.modules.job.dto.JobSearchCriteria;
 import fu.talenthub.modules.job.entity.Department;
 import fu.talenthub.modules.job.entity.Job;
 import fu.talenthub.modules.job.entity.JobStatus;
@@ -51,6 +52,26 @@ public class JobServiceImpl implements JobService {
         });
     }
 
+    @Override
+    public Page<JobResponse> searchJob(JobSearchCriteria criteria, Integer index, Integer size) {
+        if (criteria == null) {
+            criteria = new JobSearchCriteria();
+        }
+
+        String title = criteria.getTitle();
+        title = (title == null) ? null : "%" + title.trim() + "%";
+
+        if (title != null && title.isBlank()) {
+            title = null;
+        }
+
+        return jobRepository.search(PageRequest.of(index, size),
+                title, criteria.getDepartmentId(),
+                criteria.getRecruitmentMonth(), criteria.getRecruitmentYear()
+        );
+    }
+
+
     private Job toEntity(JobCreationRequest request) {
         Job job = Job.builder()
                 .title(request.getTitle())
@@ -69,6 +90,7 @@ public class JobServiceImpl implements JobService {
 
     private JobResponse toDto(Job job) {
         JobResponse response = new JobResponse();
+        response.setId(job.getId());
         response.setTitle(job.getTitle());
         response.setDescription(job.getDescription());
         response.setLocation(job.getLocation());
@@ -83,7 +105,9 @@ public class JobServiceImpl implements JobService {
         response.setUpdatedAt(job.getUpdatedAt());
         response.setCreatedBy(job.getCreatedBy());
         response.setUpdatedBy(job.getUpdatedBy());
-        response.setDepartmentName(job.getDepartment().getDepartmentName());
+        response.setDepartmentName(job.getDepartment() == null
+                ? null
+                : job.getDepartment().getDepartmentName());
         return response;
     }
 }
