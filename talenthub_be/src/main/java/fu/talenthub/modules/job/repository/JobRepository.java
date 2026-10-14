@@ -2,8 +2,10 @@ package fu.talenthub.modules.job.repository;
 
 import fu.talenthub.modules.job.dto.JobResponse;
 import fu.talenthub.modules.job.entity.Job;
+import fu.talenthub.modules.job.entity.JobStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -45,4 +47,7 @@ public interface JobRepository extends JpaRepository<Job, UUID> {
                              @Param("departmentId") UUID departmentId,
                              @Param("month") Integer month,
                              @Param("year") Integer year);
+
+    Slice<Job> findAllByStatus(JobStatus status, Pageable pageable);
 }
+

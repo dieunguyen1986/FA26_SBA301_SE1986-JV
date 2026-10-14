@@ -1,24 +1,145 @@
-import { Badge, Col, Container, Form, Row } from 'react-bootstrap'
-import { ChevronDown } from 'react-bootstrap-icons'
-import CareerSiteJobCard from '../components/CareerSiteJobCard.jsx'
+import { Badge, Col, Container, Form, Row } from "react-bootstrap";
+import { ChevronDown } from "react-bootstrap-icons";
+import CareerSiteJobCard from "../components/CareerSiteJobCard.jsx";
+import { useState, useEffect } from "react";
+import { jobApi } from "../api/job.api.js";
 
 const jobs = [
-  { id: 1, title: 'Senior Java Developer', department: 'Engineering', location: 'Ho Chi Minh City, Vietnam', posted: 'Posted 2 days ago', type: 'Full-time', color: 'primary', description: 'Design, develop, and maintain high-quality applications using Spring Boot framework.', tags: ['Java', 'Spring Boot', 'PostgreSQL'] },
-  { id: 2, title: 'UI/UX Designer', department: 'Design', location: 'Ho Chi Minh City, Vietnam', posted: 'Posted 5 days ago', type: 'Full-time', color: 'primary', description: 'Create intuitive and visually stunning user interfaces. Conduct user research and usability testing.', tags: ['Figma', 'UX Research', 'Prototyping'] },
-  { id: 3, title: 'DevOps Engineer', department: 'Engineering', location: 'Hanoi, Vietnam', posted: 'Posted 1 week ago', type: 'Full-time', color: 'primary', description: 'Build and maintain CI/CD pipelines, manage cloud infrastructure, and ensure system reliability.', tags: ['Docker', 'K8S', 'AWS', 'Terraform'] },
-  { id: 4, title: 'Product Manager', department: 'Product', location: 'Ho Chi Minh City, Vietnam', posted: 'Posted 3 days ago', type: 'Full-time', color: 'danger', description: 'Define product vision, roadmap, and strategy. Work closely with engineering and design teams.', tags: ['Agile', 'Jira', 'Roadmap'] },
-  { id: 5, title: 'Digital Marketing Specialist', department: 'Marketing', location: 'Remote', posted: 'Posted 1 day ago', type: 'Contract', color: 'warning', description: 'Plan and execute digital marketing campaigns across multiple channels including SEO, SEM, social media.', tags: ['SEO', 'Google Ads', 'Analytics'] },
-  { id: 6, title: 'Data Analyst', department: 'Analytics', location: 'Ho Chi Minh City, Vietnam', posted: 'Posted 4 days ago', type: 'Full-time', color: 'success', description: 'Analyze business data, build dashboards, and provide actionable insights to support decision-making.', tags: ['SQL', 'Python', 'Power BI'] },
-]
+  {
+    id: 1,
+    title: "Senior Java Developer",
+    department: "Engineering",
+    location: "Ho Chi Minh City, Vietnam",
+    posted: "Posted 2 days ago",
+    type: "Full-time",
+    color: "primary",
+    description:
+      "Design, develop, and maintain high-quality applications using Spring Boot framework.",
+    tags: ["Java", "Spring Boot", "PostgreSQL"],
+  },
+  {
+    id: 2,
+    title: "UI/UX Designer",
+    department: "Design",
+    location: "Ho Chi Minh City, Vietnam",
+    posted: "Posted 5 days ago",
+    type: "Full-time",
+    color: "primary",
+    description:
+      "Create intuitive and visually stunning user interfaces. Conduct user research and usability testing.",
+    tags: ["Figma", "UX Research", "Prototyping"],
+  },
+  {
+    id: 3,
+    title: "DevOps Engineer",
+    department: "Engineering",
+    location: "Hanoi, Vietnam",
+    posted: "Posted 1 week ago",
+    type: "Full-time",
+    color: "primary",
+    description:
+      "Build and maintain CI/CD pipelines, manage cloud infrastructure, and ensure system reliability.",
+    tags: ["Docker", "K8S", "AWS", "Terraform"],
+  },
+  {
+    id: 4,
+    title: "Product Manager",
+    department: "Product",
+    location: "Ho Chi Minh City, Vietnam",
+    posted: "Posted 3 days ago",
+    type: "Full-time",
+    color: "danger",
+    description:
+      "Define product vision, roadmap, and strategy. Work closely with engineering and design teams.",
+    tags: ["Agile", "Jira", "Roadmap"],
+  },
+  {
+    id: 5,
+    title: "Digital Marketing Specialist",
+    department: "Marketing",
+    location: "Remote",
+    posted: "Posted 1 day ago",
+    type: "Contract",
+    color: "warning",
+    description:
+      "Plan and execute digital marketing campaigns across multiple channels including SEO, SEM, social media.",
+    tags: ["SEO", "Google Ads", "Analytics"],
+  },
+  {
+    id: 6,
+    title: "Data Analyst",
+    department: "Analytics",
+    location: "Ho Chi Minh City, Vietnam",
+    posted: "Posted 4 days ago",
+    type: "Full-time",
+    color: "success",
+    description:
+      "Analyze business data, build dashboards, and provide actionable insights to support decision-making.",
+    tags: ["SQL", "Python", "Power BI"],
+  },
+];
 
-const CareerSiteJobList = ({ jobItems = jobs }) => {
+const CareerSiteJobList = () => {
+  const [publishedJobs, setPublishedJobs] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [nextPage, setNextPage] = useState(true);
+
+  const getJobs = async (nextPageIndex) => {
+    // API call to fetch jobs from the backend
+    try {
+      const response = await jobApi.getPublishedJobs({
+        index: nextPageIndex !== undefined ? nextPageIndex : currentPage,
+        size: 5,
+      });
+
+      const jobData = response.data;
+
+      console.log("Fetched jobs from API:", jobData.content);
+
+      setPublishedJobs(jobData.content);
+      setNextPage(jobData.nextPage);
+      setCurrentPage(jobData.currentPage);
+    } catch (error) {
+      console.error("Error fetching jobs:", error);
+    }
+  };
+
+  const handleLoadMore = async () => {
+
+    const nextPageIndex = currentPage + 1;
+
+    console.log("Loading more jobs, next page index:", nextPageIndex);
+
+    await getJobs(nextPageIndex);
+
+    // const startIndex = nextPageIndex * 3;
+    // const endIndex = startIndex + 3;
+
+    // const newJobs = jobs.slice(startIndex, endIndex);
+    // setPublishedJobs((prevJobs) => [...prevJobs, ...newJobs]);
+    // setCurrentPage(nextPageIndex);
+    // if (endIndex >= jobs.length) {
+    //   setNextPage(false);
+    // }
+  };
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      await getJobs();
+    };
+
+    fetchJobs();
+  }, []);
+
   return (
     <section id="open-positions" className="bg-light py-4 py-md-5">
       <Container>
         <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
           <div className="d-flex align-items-center gap-2">
             <h2 className="h4 fw-bold mb-0">Open Positions</h2>
-            <Badge bg="primary" className="rounded-pill fw-normal">{jobItems.length} openings</Badge>
+            <Badge bg="primary" className="rounded-pill fw-normal">
+              {publishedJobs.length} openings
+            </Badge>
           </div>
           <div className="d-flex align-items-center gap-2">
             <span className="text-muted small">Sort by:</span>
@@ -28,21 +149,37 @@ const CareerSiteJobList = ({ jobItems = jobs }) => {
                 <option>Department</option>
                 <option>Location</option>
               </Form.Select>
-              <ChevronDown className="position-absolute top-50 end-0 translate-middle-y me-2 text-muted" size={14} />
+              <ChevronDown
+                className="position-absolute top-50 end-0 translate-middle-y me-2 text-muted"
+                size={14}
+              />
             </div>
           </div>
         </div>
 
         <Row className="g-3">
-          {jobItems.map((job) => (
+          {publishedJobs.map((job) => (
             <Col key={job.id} md={6}>
               <CareerSiteJobCard job={job} />
             </Col>
           ))}
         </Row>
+
+        <Row className="mt-4">
+          <Col className="text-center">
+            {nextPage && (
+              <button
+                className="btn btn-outline-primary"
+                onClick={handleLoadMore}
+              >
+                Load More
+              </button>
+            )}
+          </Col>
+        </Row>
       </Container>
     </section>
-  )
-}
+  );
+};
 
-export default CareerSiteJobList
+export default CareerSiteJobList;

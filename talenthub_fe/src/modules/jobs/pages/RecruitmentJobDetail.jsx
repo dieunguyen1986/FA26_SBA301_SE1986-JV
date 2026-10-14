@@ -12,31 +12,6 @@ import { Badge, Button, Card, Col, Row } from "react-bootstrap";
 import { Link, useLocation, useParams } from "react-router";
 import { AuthsContext } from "../../../app/provider/AuthsContext";
 
-const fallbackJob = {
-  title: "Senior Java Developer",
-  departmentName: "Engineering",
-  location: "Ho Chi Minh City",
-  salaryMin: 30000000,
-  salaryMax: 50000000,
-  status: "OPEN",
-  deadline: "2026-12-31",
-  employmentType: "Full-time",
-  workMode: "Hybrid",
-  experience: "2+ years",
-  description:
-    "We are looking for a Senior Java Developer to build reliable services for our growing platform.",
-  requirements: [
-    "At least 2 years of experience with Java and Spring Boot.",
-    "Good understanding of REST APIs and relational databases.",
-    "Able to work with product and engineering teams.",
-  ],
-  benefits: [
-    "Competitive salary and performance bonus.",
-    "Professional development and training budget.",
-    "Flexible hybrid working environment.",
-  ],
-};
-
 const formatCurrency = (value) =>
   value == null ? "Thỏa thuận" : `${value.toLocaleString("vi-VN")} VND`;
 
@@ -56,12 +31,11 @@ const formatDate = (value) => {
 const RecruitmentJobDetail = () => {
   const { jobId } = useParams();
 
-  
+
   const location = useLocation();
   const { user } = useContext(AuthsContext);
   const basePath = user?.roles?.includes("ADMIN") ? "/admin" : "/recruiter";
   const job = {
-    ...fallbackJob,
     ...location.state?.job,
     id: location.state?.job?.id || jobId,
   };
@@ -81,10 +55,11 @@ const RecruitmentJobDetail = () => {
             Quay lại danh sách
           </Button>
           <Button
-            type="button"
+            as={Link}
+            to={`${basePath}/jobs/${job.id}/edit`}
+            state={{ job }}
             variant="primary"
             className="d-flex align-items-center gap-2"
-            title="Chức năng chỉnh sửa sẽ được cập nhật sau"
           >
             <Pencil size={16} />
             Chỉnh sửa
@@ -156,13 +131,17 @@ const RecruitmentJobDetail = () => {
           <Card className="border-0 shadow-sm">
             <Card.Body className="p-4">
               <h2 className="h5 fw-bold mb-3">Yêu cầu ứng viên</h2>
-              <ul className="text-muted mb-0">
-                {job.requirements.map((requirement) => (
-                  <li key={requirement} className="mb-2">
-                    {requirement}
-                  </li>
-                ))}
-              </ul>
+              {job.requirements?.length > 0 ? (
+                <ul className="text-muted mb-0">
+                  {job.requirements.map((requirement) => (
+                    <li key={requirement} className="mb-2">
+                      {requirement}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-muted mb-0">Job không có thuộc tính này </p>
+              )}
             </Card.Body>
           </Card>
         </Col>
@@ -175,21 +154,21 @@ const RecruitmentJobDetail = () => {
                 <Briefcase className="text-primary" size={20} />
                 <div>
                   <small className="text-muted d-block">Loại hình</small>
-                  <span className="fw-semibold">{job.employmentType}</span>
+                  <span className="fw-semibold">{job.employmentType?.length > 0 ? job.employmentType : "Job không có thuộc tính này"}</span>
                 </div>
               </div>
               <div className="d-flex align-items-center gap-3 border-bottom py-3">
                 <GeoAlt className="text-primary" size={20} />
                 <div>
                   <small className="text-muted d-block">Hình thức làm việc</small>
-                  <span className="fw-semibold">{job.workMode}</span>
+                  <span className="fw-semibold">{job.workMode?.length > 0 ? job.workMode : "Job không có thuộc tính này"}</span>
                 </div>
               </div>
               <div className="d-flex align-items-center gap-3 pt-3">
                 <Clock className="text-primary" size={20} />
                 <div>
                   <small className="text-muted d-block">Kinh nghiệm</small>
-                  <span className="fw-semibold">{job.experience}</span>
+                  <span className="fw-semibold">{job.experience?.length > 0 ? job.experience : "Job không có thuộc tính này"}</span>
                 </div>
               </div>
             </Card.Body>
@@ -198,13 +177,17 @@ const RecruitmentJobDetail = () => {
           <Card className="border-0 shadow-sm">
             <Card.Body className="p-4">
               <h2 className="h5 fw-bold mb-3">Quyền lợi</h2>
-              <ul className="text-muted mb-0">
-                {job.benefits.map((benefit) => (
-                  <li key={benefit} className="mb-2">
-                    {benefit}
-                  </li>
-                ))}
-              </ul>
+              {job.benefits?.length > 0 ? (
+                <ul className="text-muted mb-0">
+                  {job.benefits.map((benefit) => (
+                    <li key={benefit} className="mb-2">
+                      {benefit}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-muted mb-0">Job không có thuộc tính này</p>
+              )}
             </Card.Body>
           </Card>
         </Col>

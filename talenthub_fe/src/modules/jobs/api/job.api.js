@@ -1,8 +1,14 @@
 import { axiosClient } from "../../../shared/api/axiosClient";
 
 export const jobApi = {
-  getJobs: async ({ index = 0, size = 2, filters={}}) => {
-    console.log("Search parameters in API:", filters.title, filters.departmentId, filters.recruitmentMonth, filters.recruitmentYear);
+  getJobs: async ({ index = 0, size = 2, filters = {} }) => {
+    console.log(
+      "Search parameters in API:",
+      filters.title,
+      filters.departmentId,
+      filters.recruitmentMonth,
+      filters.recruitmentYear,
+    );
 
     const response = await axiosClient.get(`/api/v1/jobs`, {
       params: {
@@ -15,6 +21,30 @@ export const jobApi = {
       },
     });
 
+    return response;
+  },
+
+  getPublishedJobs: async ({ index = 0, size = 2, filters = {} }) => {
+    console.log(
+      "Search parameters in API:",
+      filters.title,
+      filters.departmentId,
+      filters.recruitmentMonth,
+      filters.recruitmentYear,
+    );
+
+    const response = await axiosClient.get(`/api/v1/public/jobs`, {
+      params: {
+        index,
+        size,
+      },
+    });
+
+    return response;
+  },
+
+  updateJob: async (id, data) => {
+    const response = await axiosClient.put(`/api/v1/jobs/${id}`, data);
     return response;
   },
 };

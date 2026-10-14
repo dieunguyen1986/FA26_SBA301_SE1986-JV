@@ -6,6 +6,7 @@ import AdminDashdoard from "../../shared/components/AdminDashdoard";
 import AdminFeaturePage from "../../shared/components/AdminFeaturePage";
 import AdminLayout from "../layouts/AdminLayout";
 import ProtectedRouter from "./ProtectedRouter";
+import RecruitmentJobEdit from "../../modules/jobs/pages/RecruitmentJobEdit";
 
 export const adminRoutes = [
   {
@@ -44,6 +45,7 @@ export const adminRoutes = [
           { path: "jobs", element: <RecruitmentJobList /> },
           { path: "jobs/new", element: <RecruitmentJobCreate /> },
           { path: "jobs/:jobId", element: <RecruitmentJobDetail /> },
+          {path: "jobs/:jobId/edit", element: <RecruitmentJobEdit /> },
           { path: "candidates", element: <ApplicantList /> },
           {
             path: "settings",

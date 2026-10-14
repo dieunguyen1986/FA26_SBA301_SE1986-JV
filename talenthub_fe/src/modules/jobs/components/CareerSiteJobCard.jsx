@@ -24,11 +24,11 @@ const CareerSiteJobCard = ({ job }) => {
         <Card.Text className="text-muted small mb-3">{job.description}</Card.Text>
 
         <Stack direction="horizontal" gap={2} className="flex-wrap">
-          {job.tags.map((tag) => (
+          {/* {job.tags.map((tag) => (
             <Badge key={tag} bg="light" text="secondary" className="fw-normal">
               {tag}
             </Badge>
-          ))}
+          ))} */}
         </Stack>
       </Card.Body>
       <Card.Footer className="bg-white border-top px-4 py-3">

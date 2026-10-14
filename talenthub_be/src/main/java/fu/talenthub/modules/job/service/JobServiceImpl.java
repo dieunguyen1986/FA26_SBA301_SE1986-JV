@@ -10,9 +10,7 @@ import fu.talenthub.modules.job.repository.DepartmentRepository;
 import fu.talenthub.modules.job.repository.JobRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
@@ -69,6 +67,19 @@ public class JobServiceImpl implements JobService {
                 title, criteria.getDepartmentId(),
                 criteria.getRecruitmentMonth(), criteria.getRecruitmentYear()
         );
+    }
+
+    @Override
+    public Slice<JobResponse> findAllByStatus(Integer page, Integer size) {
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "publishedAt");
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+
+        return jobRepository.findAllByStatus(JobStatus.PUBLISHED, pageable).map((job) -> {
+            return toDto(job);
+        });
     }
 
 
