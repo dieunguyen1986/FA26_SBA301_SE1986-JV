@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Navigate, Outlet, useLocation } from "react-router";
 import { AuthsContext } from "../provider/AuthsContext";
-import { getRoleHomePath } from "./rolePaths";
+import { getRoleHomePath, normalizeRoles } from "./rolePaths";
 
 const ProtectedRouter = ({ allowedRoles }) => {
   const { user } = useContext(AuthsContext);
@@ -9,12 +9,13 @@ const ProtectedRouter = ({ allowedRoles }) => {
   const location = useLocation();
 
   const token = user?.authToken || user?.token || null;
-  const userRoles = Array.isArray(user?.roles)
-    ? user.roles.map((role) => role.toUpperCase())
-    : [];
+  const userRoles = normalizeRoles(user?.roles);
 
+  // The backend stores the JWT in an HttpOnly cookie, so it is intentionally
+  // not present in the login response or readable from JavaScript.
   const isAuthenticated =
-    typeof token === "string" && token.trim() !== "";
+    (typeof token === "string" && token.trim() !== "") ||
+    userRoles.length > 0;
 
   if (!isAuthenticated) {
     return (
@@ -30,9 +31,7 @@ const ProtectedRouter = ({ allowedRoles }) => {
   }
 
   if (allowedRoles?.length > 0) {
-    const normalizedAllowedRoles = allowedRoles.map((role) =>
-      role.toUpperCase(),
-    );
+    const normalizedAllowedRoles = normalizeRoles(allowedRoles);
     const hasPermission = normalizedAllowedRoles.some((role) =>
       userRoles.includes(role),
     );

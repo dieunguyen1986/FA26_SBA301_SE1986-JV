@@ -17,10 +17,14 @@ function Login({ onSwitchToRegister }) {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
     try {
       const response = await authsApi.login(user);
+
       const resData = response.data;
+
       const homePath = getRoleHomePath(resData.roles);
+
 
       if (!homePath) {
         setMessage("This account does not have a supported role.");
@@ -28,6 +32,7 @@ function Login({ onSwitchToRegister }) {
       }
 
       login(resData);
+
       navigate(homePath, { replace: true });
     } catch (error) {
       setMessage(error?.response?.data?.message || error?.message || "Credential is wrong!");

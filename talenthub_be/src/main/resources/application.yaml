@@ -1,3 +1,4 @@
+
 spring:
   application:
     name: talenthub_be
@@ -27,3 +28,19 @@ spring:
 
 server:
   shutdown: graceful
+  port: 9090
+
+app:
+  jwt:
+    # Secret Base64 dùng để ký JWT; không hard-code trong source.
+    secret-base64: ${JWT_SECRET_BASE64}
+    issuer: ${JWT_ISSUER:talenthub-api}
+    access-token-ttl-seconds: ${JWT_ACCESS_TTL_SECONDS:900}
+    refresh-token-ttl-seconds: ${JWT_REFRESH_TTL_SECONDS:604800}
+  auth-cookie:
+    # Local HTTP dùng false; production HTTPS nên đặt true.
+    secure: ${AUTH_COOKIE_SECURE:false}
+    # Lax phù hợp ứng dụng same-site; None yêu cầu HTTPS và CSRF protection.
+    same-site: ${AUTH_COOKIE_SAME_SITE:Lax}
+    access-name: ${AUTH_COOKIE_ACCESS_NAME:th_access}
+    refresh-name: ${AUTH_COOKIE_REFRESH_NAME:th_refresh}

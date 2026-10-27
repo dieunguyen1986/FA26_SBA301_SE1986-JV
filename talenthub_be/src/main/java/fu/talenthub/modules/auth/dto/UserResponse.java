@@ -20,7 +20,7 @@ public class UserResponse {
     private String email;
     private String phone;
     private UUID departmentId;
-    private Set<RoleResponse> roles;
+    private Set<String> roles;
     private String ssoProviderId;
     private UserStatus status;
 }

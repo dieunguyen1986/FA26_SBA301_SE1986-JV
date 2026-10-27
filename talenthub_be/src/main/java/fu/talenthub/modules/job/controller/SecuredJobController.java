@@ -22,7 +22,7 @@ public class SecuredJobController {
     private final JobService jobService;
 
     @PostMapping
-    public ResponseEntity<?> createJob(@Valid @RequestBody JobCreationRequest request) {
+    public ResponseEntity<?> createJob( @Valid @RequestBody JobCreationRequest request) {
         return ResponseEntity.ok(jobService.createJob(request));
     }
 
