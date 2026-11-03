@@ -27,10 +27,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
+        log.info("doFilterInternal");
         Cookie[] cookies = request.getCookies();
         String accessToken = null;
 
@@ -41,6 +41,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     break;
                 }
             }
+        }
+        if(accessToken == null){
+
+            String headerValue = request.getHeader("Authorization");
+            accessToken = headerValue == null ? null : headerValue.substring("Bearer ".length());
+            log.info("Access Token with header: {} ", accessToken);
         }
 
         // 2. Extract thông tin & 3. Xác thực và lưu vào trong SecurityContext

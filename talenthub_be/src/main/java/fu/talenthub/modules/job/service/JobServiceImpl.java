@@ -11,6 +11,7 @@ import fu.talenthub.modules.job.repository.JobRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
@@ -23,6 +24,7 @@ public class JobServiceImpl implements JobService {
     private final DepartmentRepository departmentRepository;
 
     @Override
+    @PreAuthorize("hasRole('RECRUITER') or hasAuthority('CREATE_JOB')")
     public JobResponse createJob(JobCreationRequest request) {
         // Validate
 
