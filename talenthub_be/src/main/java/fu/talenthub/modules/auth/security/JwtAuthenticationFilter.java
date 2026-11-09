@@ -1,6 +1,5 @@
 package fu.talenthub.modules.auth.security;
 
-import fu.talenthub.common.Constants;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -26,17 +25,17 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    private final AuthCookieProperties authCookieProperties;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        log.info("doFilterInternal");
         Cookie[] cookies = request.getCookies();
         String accessToken = null;
 
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if (Constants.ACCESS_TOKEN.equals(cookie.getName())) {
+                if (authCookieProperties.accessName().equals(cookie.getName())) {
                     accessToken = cookie.getValue();
                     break;
                 }
@@ -45,18 +44,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if(accessToken == null){
 
             String headerValue = request.getHeader("Authorization");
-            accessToken = headerValue == null ? null : headerValue.substring("Bearer ".length());
-            log.info("Access Token with header: {} ", accessToken);
+            if (headerValue != null && headerValue.startsWith("Bearer ")) {
+                accessToken = headerValue.substring("Bearer ".length()).trim();
+            }
         }
 
         // 2. Extract thông tin & 3. Xác thực và lưu vào trong SecurityContext
         if (accessToken != null && !accessToken.trim().isEmpty()) { // Không parse đầu vào null, rỗng hoặc toàn khoảng trắng.
             try {
 
-                log.info("Access token = {}", accessToken);
-
                 String username = jwtService.extractUsername(accessToken);
-                log.info("User name {}", username);
 
                 // Chỉ tra cứu tài khoản khi subject có nội dung.
                 if (username != null && !username.isBlank()) {

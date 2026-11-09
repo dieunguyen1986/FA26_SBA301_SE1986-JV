@@ -3,7 +3,6 @@ package fu.talenthub.modules.job.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.Nationalized;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -25,15 +24,12 @@ public class Job extends  BaseEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Nationalized // Tự động map sang NVARCHAR(500)
     @Column(name = "title", length = 500)
     private String title;
 
-    @Nationalized // Tự động map sang NVARCHAR(MAX)
-    @Column(name = "description", columnDefinition = "NVARCHAR(MAX)")
+    @Column(name = "description", columnDefinition = "text")
     private String description;
 
-    @Nationalized // Tự động map sang NVARCHAR(500)
     @Column(name = "location", length = 500)
     private String location;
 

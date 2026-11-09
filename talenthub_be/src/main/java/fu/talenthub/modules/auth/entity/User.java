@@ -22,7 +22,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.Nationalized;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -47,7 +46,6 @@ public class User extends BaseEntity {
     @JoinColumn(name = "department_id", referencedColumnName = "id")
     private Department department;
 
-    @Nationalized
     @Column(name = "full_name", nullable = false, length = 255)
     private String fullName;
 

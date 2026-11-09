@@ -1,0 +1,10 @@
+.git
+.gitignore
+.idea
+.vscode
+.env
+.DS_Store
+target
+tmp
+docs
+Presentation Topics.png

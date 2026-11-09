@@ -5,14 +5,17 @@ spring:
   config:
     import: optional:file:.env[.properties]
   datasource:
-    url: ${DB_URL}
+    url: ${DB_URL:jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:talenthub}}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: ${DB_POOL_MAX_SIZE:10}
       connection-timeout: ${DB_CONNECTION_TIMEOUT_MS:30000}
       max-lifetime: ${DB_MAX_LIFETIME_MS:1800000}
+  flyway:
+    enabled: ${FLYWAY_ENABLED:true}
+    locations: classpath:db/migration
   jpa:
     open-in-view: false
     hibernate:
@@ -21,16 +24,28 @@ spring:
       hibernate:
         jdbc:
           time_zone: UTC
-        dialect: org.hibernate.dialect.SQLServerDialect
-#        show_sql: true;
+        dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-    show-sql: true
+    show-sql: ${JPA_SHOW_SQL:false}
 
 server:
   shutdown: graceful
-  port: 9090
+  address: 0.0.0.0
+  port: ${PORT:9090}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
 
 app:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}
   jwt:
     # Secret Base64 dùng để ký JWT; không hard-code trong source.
     secret-base64: ${JWT_SECRET_BASE64}

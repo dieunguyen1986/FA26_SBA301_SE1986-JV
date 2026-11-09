@@ -34,3 +34,8 @@ build/
 
 # Local environment variables
 .env
+.env.*
+!.env.example
+
+# Local deployment notes and generated guides
+/docs/

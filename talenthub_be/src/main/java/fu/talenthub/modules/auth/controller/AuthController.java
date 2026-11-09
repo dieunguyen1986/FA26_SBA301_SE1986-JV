@@ -1,6 +1,5 @@
 package fu.talenthub.modules.auth.controller;
 
-import fu.talenthub.common.Constants;
 import fu.talenthub.modules.auth.dto.CustomUserDetails;
 import fu.talenthub.modules.auth.dto.LoginRequest;
 import fu.talenthub.modules.auth.dto.UserResponse;
@@ -37,15 +36,12 @@ public class AuthController {
     public ResponseEntity<UserResponse> login(@RequestBody @Valid LoginRequest request) {
 
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword());
-        log.info("usernamePasswordAuthenticationToken={}", request);
         Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
         log.info("User details {}", userDetails.getUsername()
         );
-        userDetails.getAuthorities().stream().forEach(System.out::println);
-
         // Generate Token
         String accessToken = jwtService.generateAccessToken(userDetails);
 
@@ -61,7 +57,7 @@ public class AuthController {
                         .collect(Collectors.toSet()))
                 .build();
 
-        ResponseCookie responseCookie = ResponseCookie.from(Constants.ACCESS_TOKEN, accessToken)
+        ResponseCookie responseCookie = ResponseCookie.from(properties.accessName(), accessToken)
                 .httpOnly(true)
                 .maxAge(Duration.ofDays(1))
                 .sameSite(properties.sameSite())

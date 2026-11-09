@@ -6,7 +6,6 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.Nationalized;
 
 import java.time.OffsetDateTime;
 
@@ -22,10 +21,8 @@ public class BaseEntity {
     @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
 
-    @Nationalized
     @Column(name = "created_by", length = 255)
     private String createdBy;
-    @Nationalized
     @Column(name = "updated_by", length = 255)
     private String updatedBy;
 
